@@ -19,4 +19,4 @@ Application is young and may be extended in the future with better UI and more s
 
 Application is written upon **Kivy 1.9.2** and requires that version. I am not sure if it will run under 1.9.1 (stable), but it may after removing the *kivy.require()* line.
 
-Thanks to the Kivy Organization for awesome Kivy framework and Kivy community for help. Special thanks to **dessant** and **tshirtman** for help understanding the Kivy BorderImage.
+Thanks to the Kivy Organization for awesome Kivy framework and Kivy community for help. Special thanks to **@dessant** and **@tshirtman** for help understanding the Kivy BorderImage.
