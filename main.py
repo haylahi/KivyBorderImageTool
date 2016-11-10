@@ -1,5 +1,9 @@
 '''Application used to generate KV code for BorderImages.'''
 
+import kivy
+
+kivy.require('1.9.2')
+
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
