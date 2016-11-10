@@ -11,7 +11,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import (
     BooleanProperty,
     ListProperty,
-    StringProperty
+    StringProperty,
+    NumericProperty
 )
 from kivy.clock import mainthread
 from plyer import filechooser
@@ -33,8 +34,14 @@ class BorderImageWidget(Widget):
     border = ListProperty([0, 0, 0, 0])
     '''Border of the image taken from source, set by the user.'''
 
+    display_border = ListProperty([0, 0, 0, 0])
+    '''Size of the border on the display.'''
+
     fill_stretch_area = BooleanProperty(False)
     '''Defines if stretch area should be filled with semitransparent color.'''
+
+    scale = NumericProperty(1.0)
+    '''Scale of the borders.'''
 
 class BorderImageTool(BoxLayout):
     '''Main app widget.'''

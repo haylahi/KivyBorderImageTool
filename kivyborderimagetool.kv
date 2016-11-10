@@ -1,4 +1,5 @@
 <BorderImageWidget>:
+    display_border: [dp(v * float(self.scale)) for v in self.border]
     canvas.before:
         Color:
             rgb: 1, 1, 1
@@ -8,7 +9,7 @@
             pos: self.pos
             auto_scale: root.auto_scale
             border: root.border
-            display_border: [dp(v) for v in root.border]
+            display_border: root.display_border
     canvas.after:
         # border lines
         Color:
@@ -36,12 +37,29 @@
         orientation: 'vertical'
         size_hint: 3, 1
 
-        BorderImageWidget:
-            id: bw
+        FloatLayout:
+            id: bw_holder
             size_hint_y: 3
-            border: bottom.value, right.value, top.value, left.value
-            auto_scale: auto_scale.active
-            fill_stretch_area: fill_stretch.active
+
+            Splitter:
+                id: bw_height
+                sizable_from: 'bottom'
+                max_size: bw_holder.height
+                min_size: 10
+                pos_hint: {'center_x': 0.5, 'top': 1}
+
+                Splitter:
+                    id: bw_width
+                    sizable_from: 'right'
+                    max_size: bw_holder.width
+                    min_size: 10
+
+                    BorderImageWidget:
+                        id: bw
+                        border: bottom.value, right.value, top.value, left.value
+                        auto_scale: auto_scale.active
+                        fill_stretch_area: fill_stretch.active
+                        scale: scale.value
 
         FloatLayout:
             id: floatlayout
@@ -49,7 +67,7 @@
 
             CodeInput:
                 id: code
-                text: root.kv_string.format(bw.border, 'dp({0}), dp({1}), dp({2}), dp({3})'.format(*bw.border), auto_scale.active, '"{}"'.format(bw.source))
+                text: root.kv_string.format(bw.border, 'dp({0}), dp({1}), dp({2}), dp({3})'.format(*bw.display_border), auto_scale.active, '"{}"'.format(bw.source))
                 lexer: KivyLexer()
                 readonly: True
                 style_name: 'native'
@@ -66,6 +84,7 @@
         orientation: 'vertical'
         size_hint: 1, 1
         padding: '10dp'
+        spacing: '5dp'
 
         Button:
             text: 'Open source image'
@@ -78,7 +97,7 @@
             height: '150dp'
 
         Label:
-            text: 'Resolution: {0}x{1}'.format(*thumb.texture.size) if thumb.texture else ''
+            text: 'Texture resolution: {2}x{3}, widget size: {0}x{1}'.format(bw_width.width, bw_height.height, *thumb.texture.size) if thumb.texture else ''
 
         Label:
             text: 'BorderImage settings'
@@ -110,6 +129,16 @@
         SliderWithLabel:
             id: top
             value: 30
+
+        Label:
+            text: 'Scale of the borders'
+
+        SliderWithLabel:
+            id: scale
+            value: 1.0
+            min: 0.1
+            max: 1.0
+            step: 0.01
 
         CheckBoxWithLabel:
             text: 'auto_scale'
