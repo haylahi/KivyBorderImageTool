@@ -3,7 +3,7 @@
 
 The application is really easy to use: simply open the image that interests you (PNG or JPG) and with the set of sliders you can easily tune the widget BorderImage properties.
 
-![screenshot](https://github.com/rafalo1333/KivyBorderImageTool/raw/master/src/screenshot.png "Screenshot")
+![screenshot](https://github.com/rafalo1333/KivyBorderImageTool/blob/master/screenshot.png "Screenshot")
 
 Program supports:
 
