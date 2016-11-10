@@ -1,0 +1,149 @@
+<BorderImageWidget>:
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1
+        BorderImage:
+            source: root.source
+            size: self.size
+            pos: self.pos
+            auto_scale: root.auto_scale
+            border: root.border
+            display_border: [dp(v) for v in root.border]
+    canvas.after:
+        # border lines
+        Color:
+            rgba: [0, 0, 1, 0.3] if root.fill_stretch_area else [0, 0, 0, 0]
+        Rectangle:
+            size: self.width - self.border[3] - self.border[1], self.height - self.border[0] - self.border[2]
+            pos: self.x + root.border[3], self.y + self.border[0]
+        Color:
+            rgb: 1, 0, 0
+        Line:
+            points: self.x, self.y + self.border[0], self.right, self.y + self.border[0]
+        Line:
+            points: self.x, self.top - self.border[2], self.right, self.top - self.border[2]
+        Line:
+            points: self.x + self.border[3], self.y, self.x + self.border[3], self.top
+        Line:
+            points: self.right - self.border[1], self.y, self.right - self.border[1], self.top
+
+#: import KivyLexer kivy.extras.highlight.KivyLexer
+#: import Clipboard kivy.core.clipboard.Clipboard
+
+<BorderImageTool>:
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 3, 1
+
+        BorderImageWidget:
+            id: bw
+            size_hint_y: 3
+            border: bottom.value, right.value, top.value, left.value
+            auto_scale: auto_scale.active
+            fill_stretch_area: fill_stretch.active
+
+        FloatLayout:
+            id: floatlayout
+            size_hint_y: 1
+
+            CodeInput:
+                id: code
+                text: root.kv_string.format(bw.border, 'dp({0}), dp({1}), dp({2}), dp({3})'.format(*bw.border), auto_scale.active, '"{}"'.format(bw.source))
+                lexer: KivyLexer()
+                readonly: True
+                style_name: 'native'
+
+            Button:
+                size_hint: None, None
+                size: '150dp', '48dp'
+                text: 'Copy to clipboard'
+                on_release: Clipboard.copy(code.text)
+                right: floatlayout.right - dp(10)
+                top: floatlayout.top - dp(10)
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        padding: '10dp'
+
+        Button:
+            text: 'Open source image'
+            on_release: root.open_image()
+
+        Image:
+            id: thumb
+            source: bw.source
+            size_hint_y: None
+            height: '150dp'
+
+        Label:
+            text: 'Resolution: {0}x{1}'.format(*thumb.texture.size) if thumb.texture else ''
+
+        Label:
+            text: 'BorderImage settings'
+
+        Label:
+            text: 'Left'
+
+        SliderWithLabel:
+            id: left
+            value: 30
+
+        Label:
+            text: 'Bottom'
+
+        SliderWithLabel:
+            id: bottom
+            value: 30
+
+        Label:
+            text: 'Right'
+
+        SliderWithLabel:
+            id: right
+            value: 30
+
+        Label:
+            text: 'Top'
+
+        SliderWithLabel:
+            id: top
+            value: 30
+
+        CheckBoxWithLabel:
+            text: 'auto_scale'
+            id: auto_scale
+
+        CheckBoxWithLabel:
+            text: 'fill stretch area?'
+            id: fill_stretch
+
+<SliderWithLabel@BoxLayout>:
+    value: slider.value
+    on_value: slider.value = self.value
+    min: 0
+    max: 250
+    step: 1
+
+    Slider:
+        id: slider
+        min: root.min
+        max: root.max
+        step: root.step
+
+    Label:
+        text: str(slider.value)
+        size_hint_x: 0.3
+
+<CheckBoxWithLabel@BoxLayout>:
+    text: ''
+    active: checkbox.active
+    on_active: checkbox.active = self.active
+
+    CheckBox:
+        id: checkbox
+        size_hint_x: 0.3
+
+    Label:
+        text: root.text
